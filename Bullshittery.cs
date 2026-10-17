@@ -23,7 +23,7 @@ namespace Bullshittery
         internal static Bullshittery Instance;
 
         public Bullshittery() : base("Bullshittery") { }
-        public override string GetVersion() => "1.4.69.2"; // Major.Minor.Build.Revision
+        public override string GetVersion() => "1.4.69.3"; // Major.Minor.Build.Revision
         public bool greenEnabled = true;
         public bool redEnabled = false;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -116,21 +116,23 @@ namespace Bullshittery
             if (soulHPTimer >= soulHPTimerDuration)
             {
                 soulHPTimer -= soulHPTimerDuration;
-                if (pd.MPCharge == 0)
-                    Log("Keep your soul meter filled dingus");
+
                 Vector3 aspidSpawn1 = knightPos + new Vector3(-4f, 2f, knightPos.z);
                 Vector3 aspidSpawn2 = knightPos + new Vector3(4f, 2f, knightPos.z);
                 Vector3 aspidSpawn3 = knightPos + new Vector3(0f, 4f, knightPos.z);
-                int i = 0;
-               while (i < 3) 
-               {
-                    i++;
-                    SpawnPrimalAspid(aspidSpawn1);
-                    SpawnPrimalAspid(aspidSpawn2);
-                    SpawnPrimalAspid(aspidSpawn3);
-               }
+                if (pd.MPCharge == 0)
+                {
+                    int i = 0;
+                    while (i < 3)
+                    {
+                        i++;
+                        SpawnPrimalAspid(aspidSpawn1);
+                        SpawnPrimalAspid(aspidSpawn2);
+                        SpawnPrimalAspid(aspidSpawn3);
+                    }
+                }
                 
-            }
+                }
 
             }
         }
