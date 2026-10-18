@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using GlobalEnums;
 using HutongGames.PlayMaker.Actions;
 using Modding;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Bullshittery
 {
     public class Bullshittery : Mod
     {
+        private int JumpDeathChance = 5000; // default: 5000
         public override List<(string, string)> GetPreloadNames()
         {
             return new List<(string, string)>
@@ -23,13 +25,13 @@ namespace Bullshittery
         internal static Bullshittery Instance;
 
         public Bullshittery() : base("Bullshittery") { }
-        public override string GetVersion() => "1.4.69.3"; // Major.Minor.Build.Revision
+        public override string GetVersion() => "1.5.69.5"; // Major.Minor.Build.Revision/Hotfix
         public bool greenEnabled = true;
         public bool redEnabled = false;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             Log("Initializing");
-
+            
             Instance = this;
 
             Log("Initialized");
@@ -38,9 +40,6 @@ namespace Bullshittery
             UObject.DontDestroyOnLoad(PrimalAspidPrefab);
             PrimalAspid = PrimalAspidPrefab;
             PrimalAspid.SetActive(false);
-
-            
-            
 
 
             
@@ -51,10 +50,39 @@ namespace Bullshittery
             ModHooks.SavegameSaveHook += SaveHook;
             ModHooks.HeroUpdateHook += PrimalAspidTimer;
             ModHooks.HeroUpdateHook += SoulHPTimer;
+            On.HeroController.Jump += OnJump;
+            On.HeroController.TakeDamage += TakeDamageHook;
+
+
 
         }
 
-        
+        private void TakeDamageHook(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, CollisionSide damageSide, int damageAmount, int hazardType)
+        {
+            if (go != null)
+            {
+                string enemy = go.name;
+
+                if (enemy.Contains("Climber"))
+                {
+                    damageAmount *= 4;
+                }
+                orig(self, go, damageSide, damageAmount, hazardType);
+            }
+        } 
+
+        private void OnJump(On.HeroController.orig_Jump orig, HeroController self)
+        {
+            orig(self);
+            PlayerData pd = self.playerData;
+            int chance = UnityEngine.Random.Range(0, JumpDeathChance);
+            if (chance == 1 && pd.health != 1)
+            {
+                int maskRemoveCount = pd.health - 1;
+                self.TakeDamage(self.gameObject, GlobalEnums.CollisionSide.other, maskRemoveCount, 0);
+                Log("dude it's like a 1 in 5000 chance how unlucky are you");
+            }
+        }
 
         private void SaveHook(int obj)
         {
@@ -71,7 +99,7 @@ namespace Bullshittery
 
 
         private float aspidTimer = 0f;
-        private const float aspidTimerDuration = 40f;
+        private const float aspidTimerDuration = 60f;
         private void PrimalAspidTimer()
         {
             HeroController hero = HeroController.instance;
@@ -105,7 +133,7 @@ namespace Bullshittery
         }
 
         private float soulHPTimer = 0f;
-        private const float soulHPTimerDuration = 60f;
+        private const float soulHPTimerDuration = 120f;
         private void SoulHPTimer()
         {
             HeroController hero = HeroController.instance;
@@ -131,6 +159,7 @@ namespace Bullshittery
                         SpawnPrimalAspid(aspidSpawn3);
                     }
                 }
+                
                 
                 }
 

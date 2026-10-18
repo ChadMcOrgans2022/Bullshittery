@@ -15,8 +15,8 @@
     <Product>Bullshittery</Product>
     <Description>Adds probably the most random features you've ever seen, ranging from simple features to jawdropping bullshit</Description>
     <Copyright>Copyright ©  2026</Copyright>
-    <AssemblyVersion>1.4.69.3</AssemblyVersion>
-    <FileVersion>1.4.69.3</FileVersion>
+    <AssemblyVersion>1.5.69.5</AssemblyVersion>
+    <FileVersion>1.5.69.5</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
