@@ -40,8 +40,6 @@ namespace Bullshittery
             UObject.DontDestroyOnLoad(PrimalAspidPrefab);
             PrimalAspid = PrimalAspidPrefab;
             PrimalAspid.SetActive(false);
-
-
             
             ModHooks.HeroUpdateHook += () =>
             {
@@ -51,10 +49,7 @@ namespace Bullshittery
             ModHooks.HeroUpdateHook += PrimalAspidTimer;
             ModHooks.HeroUpdateHook += SoulHPTimer;
             On.HeroController.Jump += OnJump;
-            On.HeroController.TakeDamage += TakeDamageHook;
-
-
-
+            On.HeroController.TakeDamage += TakeDamageHook; 
         }
 
         private void TakeDamageHook(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, CollisionSide damageSide, int damageAmount, int hazardType)
@@ -159,10 +154,7 @@ namespace Bullshittery
                         SpawnPrimalAspid(aspidSpawn3);
                     }
                 }
-                
-                
                 }
-
             }
         }
 }
